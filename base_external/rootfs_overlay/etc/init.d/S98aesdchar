@@ -64,7 +64,7 @@ MAIN_GROUP=$(choose_group)
 case "$1" in
     start)
         echo "Loading aesdchar module..."
-        load_mod aesdchar /path/to/aesdchar.ko
+        load_mod aesdchar.ko
         ;;
     stop)
         echo "Unloading aesdchar module..."
