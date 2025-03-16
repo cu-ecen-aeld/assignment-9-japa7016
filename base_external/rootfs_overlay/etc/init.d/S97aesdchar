@@ -13,28 +13,20 @@ choose_group()
 
 load_mod() 
 {
-    local modName="$1"
+    local modName="$1"  # e.g. aesdchar
     local modFile="$2"  # e.g. /lib/modules/$(uname -r)/extra/aesdchar.ko
     local foundMajor
 
-    # Try modprobe first (if your module is installed in /lib/modules)
-    # If that fails, fall back to insmod with a local .ko file
     if ! modprobe "$modName" 2>/dev/null; then
         echo "modprobe $modName failed, trying insmod $modFile"
         insmod "$modFile" || exit 1
     fi
 
-    # Find the major number from /proc/devices
     foundMajor=$(awk '$2=="'"$modName"'" {print $1}' /proc/devices)
     [ -z "$foundMajor" ] && return
 
-    # Remove old node if any
     rm -f /dev/"$modName"
-
-    # Create the device node with major=<foundMajor>, minor=0
     mknod /dev/"$modName" c "$foundMajor" 0
-
-    # Set group/permissions
     chgrp "$MAIN_GROUP" /dev/"$modName"
     chmod 664 /dev/"$modName"
 }
@@ -64,7 +56,8 @@ MAIN_GROUP=$(choose_group)
 case "$1" in
     start)
         echo "Loading aesdchar module..."
-        load_mod aesdchar.ko
+        # Pass two arguments: the module name (no .ko) and the path to the .ko file
+        load_mod aesdchar /lib/modules/$(uname -r)/extra/aesdchar.ko
         ;;
     stop)
         echo "Unloading aesdchar module..."
@@ -75,5 +68,4 @@ case "$1" in
         exit 1
         ;;
 esac
-
 exit 0
