@@ -1,5 +1,5 @@
 #git commit Hash
-AESDCHAR_VERSION = 02e09a508f5ddbb850b7125f8084c2e936d13d26
+AESDCHAR_VERSION = a106d0a8a4715e848fa81a61fdc3472da16e6db3
 
 
 AESDCHAR_SITE = git@github.com:cu-ecen-aeld/assignments-3-and-later-japa7016.git
